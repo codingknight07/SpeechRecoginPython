@@ -101,7 +101,7 @@ while(1) : #exit button GUI
     
     audio_data=ret_speech()
     
-    #text_speech('something went wrong try again or say exit')
+    #text_speech('something went wrong try again or say exit
         
     print(audio_data)
     respond(audio_data)
