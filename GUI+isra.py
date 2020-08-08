@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Aug  8 22:04:11 2020
+
+@author: Tushar Garg
+"""
+
 import speech_recognition as sr
 import time
 import webbrowser
@@ -196,13 +203,4 @@ _photo = photo.subsample(4,4)
 mic_button = Button(_root,text='mic',command=lambda:change_state(l[0]))#mic_button = Button(_root, image = _photo,command=hear)
 mic_button.place(relx=0.5, rely=0.15, anchor = CENTER)
 
-
-       
-
-    #text_speech('something went wrong try again or say exit
-print(audio_data)
-respond(audio_data)
-print('Listening...')
-    
-_root.mainloop()   
-    
+_root.mainloop()
