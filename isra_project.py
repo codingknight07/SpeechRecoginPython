@@ -15,6 +15,8 @@ from tkinter.ttk import *
 r=sr.Recognizer()
 #list acting as global variable
 l=[0]
+
+
 #ret_speech invokes mic gets input convert to text and returns
 def ret_speech() :
     with sr.Microphone() as src : 
@@ -52,6 +54,7 @@ def respond(audio_data) :
     got=0
     if 'exit'  in audio_data.lower() : 
         text_speech('Bye! Have a nice Day')
+        mic_button.configure(image = _offmic)
         return 0
          #change button state function to off      
     if 'is your name' in audio_data.lower() : 
@@ -64,7 +67,7 @@ def respond(audio_data) :
         got=1
         url='https://www.google.co.in/search?q='+audio_data[(tmp+7):]
         text_speech('Searching, Web')
-        
+        mic_button.configure(image = _offmic)
         try :
             webbrowser.open_new_tab(url)
             
@@ -78,12 +81,13 @@ def respond(audio_data) :
         
         url='https://www.google.co.in/search?q='+audio_data[(tmp+7):]
         text_speech('Searching Web')
-        
+        mic_button.configure(image = _onmic)
         try :
             webbrowser.open_new_tab(url)
             
         except : 
             text_speech('cannot find a browser')
+            mic_button.configure(image = _offmic)
         return 0    #change button state function to off
          
     elif 'what can you do' in audio_data.lower() : 
@@ -113,7 +117,8 @@ def respond(audio_data) :
 _root = Tk()
 _root.title('ISRA')
 _root.iconbitmap('ISRA LOGO.ico')
-_root.geometry('330x300')
+_root.geometry('430x500')
+_root.resizable(height = False, width=False)
 
 def _about():
         about = Tk()
@@ -136,11 +141,21 @@ def _help():
         h.pack()
         
  #adding assistant text area
+        
+ass_text = Text(_root, height = 18 , width=48)
+ass_text.place(anchor = CENTER, relx=0.48,rely=0.49)
 scroll = Scrollbar(_root)
-scroll.place(relx=0.605, rely=0.6, anchor = CENTER)        
-ass_text = Text(_root, height = 10 , width=35, yscrollcommand = scroll.set)
-ass_text.place(anchor = CENTER, relx=0.5,rely=0.6)
+scroll.pack(side = RIGHT, fill = Y)
+ass_text.config(yscrollcommand = scroll.set)
 scroll.config(command = ass_text.yview)
+
+#Web search entry
+search_lab = Label(_root, text = 'Search Web: ', font = ("Times New Roman", 10, "bold"))
+search_lab.place(relx=0.1 , rely = 0.85, anchor = CENTER)
+search_entry = Entry(_root)
+search_entry.config(width = 53)
+search_entry.place(relx=0.56,rely=0.85,anchor=CENTER)
+
 #hear fn invoked as thread after you Activate mic
 def hear(): 
     text_speech('Hi!,How may, I help you?')  
@@ -156,46 +171,58 @@ def hear():
         ass_text.insert(END,'\n'+audio_data)#create update user text widget fn
         l[0]=respond(audio_data)
     
- #changing state(on/off) of mic using global list variable        
+ #changing state(on/off) of mic using global list variable
+
+onmic = PhotoImage(file = 'MIC.png')
+_onmic = onmic.subsample(4,4)
+
+offmic = PhotoImage(file = 'offmic.png')
+_offmic = offmic.subsample(4,4)
+        
 def change_state(i) :
     if i==0 :
         l[0]=1
         threading.Thread(target=hear).start()
         l[0]=1
+        mic_button.configure(image = _onmic)
     else : 
         l[0]=0
         text_speech('mic off')
-          
- #setting menues
+        mic_button.configure(image = _offmic)
+#making menus
 my_menu = Menu(_root)
+
 _root.config(menu = my_menu)
 
-    #setting main menu
-options_menu = Menu(my_menu,tearoff = 0)
-my_menu.add_cascade(label ='Menu', menu = options_menu)
-options_menu.add_command(label="Settings")
-options_menu.add_command(label ='Help', command = _help)
-options_menu.add_command(label ='About', command = _about)
+my_menu.add_cascade(label = 'Settings')
 
-    #setting another menu
-options_menu = Menu(my_menu,tearoff = 0)
-my_menu.add_cascade(label ='Account', menu = options_menu)
-options_menu.add_command(label="General")
-options_menu.add_command(label ='Privacy and Security')
-options_menu.add_command(label ='Sign Out')
+options = Menu(my_menu, tearoff = 0)
+my_menu.add_cascade(label = 'Account', menu = options)
+options.add_command(label = 'General')
+options.add_command(label = 'Privacy and Security')
+options.add_separator()
+options.add_command(label = 'Sign Out')
+
+my_menu.add_cascade(label = 'Help', command = _help)
+
+my_menu.add_cascade(label = 'About', command = _about)
 
     #Making Exit button
-exit_button = Button(_root, text='Exit', command = _root.destroy)
+#Making Exit button
+style = Style()
+style.configure('Exit.TButton', font =('Showcard Gothic', 10))
+
+exit_button = Button(_root, text='Exit', style = 'Exit.TButton', command = _root.destroy)
 exit_button.place(relx=0.5, rely=0.95, anchor = CENTER)
-exit_button.config(width = 15)
+exit_button.config( width = 25)
 
     #Making Mic button
-photo = PhotoImage(file = 'MIC.png')
-_photo = photo.subsample(4,4)
-#mic photo not working have to fix
-mic_button = Button(_root,text='mic',command=lambda:change_state(l[0]))#mic_button = Button(_root, image = _photo,command=hear)
-mic_button.place(relx=0.5, rely=0.15, anchor = CENTER)
 
+#mic photo not working have to fix
+mic_button = Button(_root, image = _offmic, command=lambda:change_state(l[0]))#mic_button = Button(_root, image = _photo,command=hear)
+mic_button.place(relx=0.5, rely=0.1, anchor = CENTER)
+
+<<<<<<< HEAD
 
        
 
@@ -206,3 +233,6 @@ print('Listening...')
     
 _root.mainloop()   
     
+=======
+_root.mainloop()
+>>>>>>> upstream/master
