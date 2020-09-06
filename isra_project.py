@@ -222,17 +222,4 @@ exit_button.config( width = 25)
 mic_button = Button(_root, image = _offmic, command=lambda:change_state(l[0]))#mic_button = Button(_root, image = _photo,command=hear)
 mic_button.place(relx=0.5, rely=0.1, anchor = CENTER)
 
-<<<<<<< HEAD
-
-       
-
-    #text_speech('something went wrong try again or say exit
-print(audio_data)
-respond(audio_data)
-print('Listening...')
-    
-_root.mainloop()   
-    
-=======
 _root.mainloop()
->>>>>>> upstream/master
